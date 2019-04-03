@@ -18,6 +18,7 @@ var/
 node_modules/
 .vscode/
 __pycache__/
+environment.yml
 
 # Serverless directories
 .serverless

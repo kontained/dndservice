@@ -1,21 +1,33 @@
 service: dnd
+
 provider:
   name: aws
   runtime: python3.6
-  include:
-    - token_validator/**
+
+package:
+  exclude:
+    - .vscode/**
+    - env/**
+    - __pycache__/**
+    - package.json
+    - environment.yml
+
 functions:
   auth:
-    handler: token_handler.authorize
-  test:
-    handler: test.get
+    handler: auth/handler.authorize
+    environment:
+      SECRET_KEY: $(file(../environment.yml):secret_key)
+  users:
+    handler: users/handler.get
     events:
       - http:
-          path: /
+          path: /users
           method: get
           authorizer: auth
+
 plugins:
-  - serverless-python-requirements
+- serverless-python-requirements
+
 custom:
   pythonRequirements:
-    pythonBin: /home/kory/Documents/development/python/dnd/env/bin/python3
+    pythonBin: ./env/bin/python3
