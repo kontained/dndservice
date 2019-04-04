@@ -16,7 +16,7 @@ functions:
   auth:
     handler: auth/handler.authorize
     environment:
-      SECRET_KEY: $(file(../environment.yml):secret_key)
+      SECRET_KEY: ${file(./environment.yml):secret_key}
   users:
     handler: users/handler.get
     events:

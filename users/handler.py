@@ -1,12 +1,19 @@
 import logging
 import json
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 
 def get(event, context):
-    logging.info(f'Received event: {event} context: {context}')
+    logger.info(f'Received event: {event} context: {context}')
 
     try:
-        return json.dumps(event)
+        return {
+            'statusCode': 200,
+            'body': 'Users test!',
+            'headers': {}
+        }
     except Exception as e:
-        logging.error(e, exc_info=True)
+        logger.error(e, exc_info=True)
         raise Exception('Unauthorized')

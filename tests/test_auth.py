@@ -6,7 +6,7 @@ from auth.handler import validate, authorize, generate_aws_policy
 
 class TestAuth(TestCase):
     def test_validate_invalid_token(self):
-        with mock.patch.dict('os.environ', {'SECRET_KEY': 'f87be322b24b29ee85593f2b976c1737'}):
+        with mock.patch.dict('os.environ', {'SECRET_KEY': '123456789'}):
             payload = {
                 'exp': datetime.utcnow() + timedelta(days=1),
                 'iat': datetime.utcnow(),
@@ -15,7 +15,7 @@ class TestAuth(TestCase):
 
             token = jwt.encode(
                 payload,
-                'f87be322b24b29ee85593f2b976c1737',
+                '987654321',
                 algorithm='HS256'
             )
 
