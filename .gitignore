@@ -16,9 +16,13 @@ var/
 .installed.cfg
 *.egg
 node_modules/
-.vscode/
 __pycache__/
-environment.yml
 
 # Serverless directories
 .serverless
+
+# vscode
+.vscode/
+
+# Custom files
+environment.yml

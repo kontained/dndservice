@@ -1,7 +1,7 @@
 from unittest import TestCase, mock
 from datetime import datetime, timedelta
 import jwt
-from auth.handler import validate, authorize, generate_aws_policy
+from auth.authorizer import handler, generate_aws_policy, validate
 
 
 class TestAuth(TestCase):

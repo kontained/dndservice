@@ -1,19 +1,15 @@
-import logging
 import json
-
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
 
 
 def get(event, context):
-    logger.info(f'Received event: {event} context: {context}')
+    body = {
+        "message": "Hello from get users!!",
+        "input": event
+    }
 
-    try:
-        return {
-            'statusCode': 200,
-            'body': 'Users test!',
-            'headers': {}
-        }
-    except Exception as e:
-        logger.error(e, exc_info=True)
-        raise Exception('Unauthorized')
+    response = {
+        "statusCode": 200,
+        "body": json.dumps(body)
+    }
+
+    return response

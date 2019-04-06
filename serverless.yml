@@ -1,5 +1,4 @@
-service: dnd
-
+service: api-gateway
 provider:
   name: aws
   runtime: python3.6
@@ -13,20 +12,67 @@ package:
     - environment.yml
 
 functions:
-  auth:
-    handler: auth/handler.authorize
+  generalAuthorizer:
+    handler: auth/authorizer.handler
     environment:
       SECRET_KEY: ${file(./environment.yml):secret_key}
-  users:
-    handler: users/handler.get
-    events:
-      - http:
-          path: /users
-          method: get
-          authorizer: auth
+
+resources:
+  Resources:
+    ApiGateway:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        Name: ApiGateway
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        AuthorizerResultTtlInSeconds: 60
+        AuthorizerUri:
+          Fn::Join:
+            - ''
+            - 
+              - 'arn:aws:apigateway:'
+              - Ref: "AWS::Region"
+              - ':lambda:path/2015-03-31/functions/'
+              - Fn::GetAtt: "GeneralAuthorizerLambdaFunction.Arn"
+              - "/invocations"
+        IdentitySource: method.request.header.Authorization
+        IdentityValidationExpression: "Bearer .+"
+        Name: api-authorizer
+        RestApiId: { Ref: ApiGateway }
+        Type: TOKEN
+    ApiGatewayAuthorizerPermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName:
+          Fn::GetAtt: GeneralAuthorizerLambdaFunction.Arn
+        Action: lambda:InvokeFunction
+        Principal:
+          Fn::Join: ["",["apigateway.", { Ref: "AWS::URLSuffix"}]]
+
+  Outputs:
+    apiGatewayRestApiId:
+      Value:
+        Ref: ApiGateway
+      Export:
+        Name: MyApiGateway-restApiId
+
+    apiGatewayRestApiRootResourceId:
+      Value:
+        Fn::GetAtt:
+          - ApiGateway
+          - RootResourceId
+      Export:
+        Name: MyApiGateway-rootResourceId
+
+    apiGatewayAuthorizerId:
+      Value:
+        Ref: ApiGatewayAuthorizer
+      Export:
+        Name: MyApiAuthorizerId
 
 plugins:
-- serverless-python-requirements
+  - serverless-python-requirements
 
 custom:
   pythonRequirements:

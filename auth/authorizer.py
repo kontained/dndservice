@@ -7,7 +7,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def authorize(event, context):
+def handler(event, context):
     try:
         logger.info(f'Received event: {event} context: {context}')
 
