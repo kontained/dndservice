@@ -10,13 +10,7 @@ logger.setLevel(logging.INFO)
 def handler(event, context):
     try:
         logger.info(f'Received event: {event} context: {context}')
-
         token = event.get('authorizationToken')[7:]
-
-        if token is None:
-            logger.error('Token not found, exiting')
-            raise Exception('Token not found')
-
         payload = validate(token)
         policy = generate_aws_policy(payload.get('sub'), 'Allow', event.get('methodArn'))
         logger.info(f'Returning policy: {policy}')

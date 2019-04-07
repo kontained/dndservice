@@ -40,3 +40,32 @@ class TestAuth(TestCase):
 
             self.assertIsNotNone(result)
             self.assertEqual(payload.get('sub'), result.get('sub'))
+
+    def test_handler_no_token(self):
+        event = {
+            'event': 'test'
+        }
+
+        context = {
+            'context': 'text'
+        }
+
+        self.assertRaises(Exception, handler, event, context)
+
+    def test_handler_event_is_none(self):
+        context = {
+            'context': 'text'
+        }
+
+        self.assertRaises(Exception, handler, None, context)
+
+    def test_handler_token_is_none(self):
+        event = {
+            'authorizationToken': None
+        }
+
+        context = {
+            'context': 'text'
+        }
+
+        self.assertRaises(Exception, handler, event, context)
