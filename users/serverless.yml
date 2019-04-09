@@ -18,13 +18,9 @@ package:
     - environment.yml
 
 functions:
-  getUsers:
-    handler: handler.get
+  login:
+    handler: login.handler
     events:
       - http:
-          path: /users
-          method: get
-          authorizer:
-            type: CUSTOM
-            authorizerId:
-              'Fn::ImportValue': MyApiAuthorizerId
+          path: /users/login
+          method: post
