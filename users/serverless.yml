@@ -24,3 +24,9 @@ functions:
       - http:
           path: /users/login
           method: post
+  register:
+    handler: register.handler
+    events:
+      - http:
+          path: /users/register
+          method: post
