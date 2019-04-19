@@ -16,6 +16,8 @@ package:
     - __pycache__/**
     - package.json
     - environment.yml
+  include:
+    - users/**
 
 functions:
   login:
@@ -30,3 +32,10 @@ functions:
       - http:
           path: /users/register
           method: post
+
+plugins:
+  - serverless-python-requirements
+custom:
+  pythonRequirements:
+    pythonBin: ../env/bin/python3
+    fileName: ../requirements.txt
