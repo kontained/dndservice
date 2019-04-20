@@ -39,3 +39,16 @@ custom:
   pythonRequirements:
     pythonBin: ../env/bin/python3
     fileName: ../requirements.txt
+    noDeploy:
+      - autopep8
+      - pylint
+      - pkg-resources
+      - boto3
+      - botocore
+      - docutils
+      - jmespath
+      - pip
+      - python-dateutil
+      - s3transfer
+      - setuptools
+      - six
