@@ -1,29 +1,28 @@
 import json
 import logging
 from bcrypt import hashpw, gensalt
-from users.models.user import User
+from .usermodel import User
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
 def handler(event, context):
-    try:
-        logger.info(f'Received event: {event} context: {context}')
+    try:    
+        logger.info(f'Register handler received event: {event} context: {context}')
 
-        body = event.get('body')
-
+        body = json.loads(event.get('body'))
         username = body.get('username')
-        password_hash = hashpw(body.get('password'), gensalt())
+        password = body.get('password')
 
-        body = {
-            'username': username,
-            'password_hash': password_hash
-        }
+        if not username or not password:
+            raise ValueError(f'Username and password is required for registration.')
 
-        #if username:
-        #   for user in User.username_index.query(body.get('username')):
-        #        raise Exception(f'Username {user.User} already exists!')
+        if username:
+            for user in User.username_index.query(body.get('username')):
+                raise ValueError(f'Username {user.User} already exists!')
+
+        password_hash = hashpw(body.get('password').encode(), gensalt())
 
         response = {
             "statusCode": 200,

@@ -35,6 +35,7 @@ functions:
 
 plugins:
   - serverless-python-requirements
+
 custom:
   pythonRequirements:
     pythonBin: ../env/bin/python3
