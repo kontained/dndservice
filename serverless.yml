@@ -10,6 +10,8 @@ package:
     - __pycache__/**
     - package.json
     - environment.yml
+  include:
+    - common/**
 
 functions:
   generalAuthorizer:
