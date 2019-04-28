@@ -1,14 +1,14 @@
 import json
 import logging
 from bcrypt import hashpw, gensalt
-from .usermodel import User
+from common.users.usermodel import User
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
 def handler(event, context):
-    try:    
+    try:
         logger.info(f'Register handler received event: {event} context: {context}')
 
         body = json.loads(event.get('body'))

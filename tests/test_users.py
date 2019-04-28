@@ -1,5 +1,5 @@
 from unittest import TestCase, mock
-from users.usermodel import User
+from common.users.usermodel import User
 from bcrypt import hashpw, checkpw, gensalt
 
 

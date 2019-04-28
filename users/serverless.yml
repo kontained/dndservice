@@ -17,7 +17,7 @@ package:
     - package.json
     - environment.yml
   include:
-    - users/**
+    - ../common/**
 
 functions:
   login:
