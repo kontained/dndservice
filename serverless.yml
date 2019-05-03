@@ -18,6 +18,7 @@ functions:
     handler: auth/authorizer.handler
     environment:
       SECRET_KEY: ${file(./environment.yml):secret_key}
+      REFRESH_KEY: ${file(./environment.yml):refresh_key}
 
 resources:
   Resources:

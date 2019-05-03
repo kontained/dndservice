@@ -27,9 +27,12 @@ def handler(event, context):
 
         user = User(
             username=username,
-            password_hash=hashpw(body.get('password').encode(), gensalt()))
+            password_hash=hashpw(body.get('password').encode(), gensalt()),
+            refresh_token = '')
 
         token = create_user_token(user)
+
+        user.save()
 
         response = {
             "statusCode": 200,

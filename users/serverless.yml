@@ -26,12 +26,18 @@ functions:
       - http:
           path: /users/login
           method: post
+    environment:
+      SECRET_KEY: ${file(../environment.yml):secret_key}
+      REFRESH_KEY: ${file(../environment.yml):refresh_key}
   register:
     handler: register.handler
     events:
       - http:
           path: /users/register
           method: post
+    environment:
+      SECRET_KEY: ${file(../environment.yml):refresh_key}
+      REFRESH_KEY: ${file(../environment.yml):refresh_key}
 
 plugins:
   - serverless-python-requirements

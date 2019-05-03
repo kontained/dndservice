@@ -62,6 +62,9 @@ class TestRegister(TestCase):
             }
 
             result = handler(event, None)
+            body = json.loads(result.get('body'))
 
             self.assertIsNotNone(result)
             self.assertEqual(result.get('statusCode'), 200)
+            self.assertIsNotNone(body.get('user_id'))
+            self.assertIsNotNone(body.get('token'))
