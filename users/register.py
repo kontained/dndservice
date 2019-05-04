@@ -2,7 +2,7 @@ import json
 import logging
 from bcrypt import hashpw, gensalt
 from common.users.usermodel import User
-from common.token.factory import create_user_token
+from common.token.factory import create_user_token_as_string
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -21,18 +21,15 @@ def handler(event, context):
             raise ValueError(
                 'Username and password is required for registration.')
 
-        if username:
-            for user in User.username_index.query(body.get('username')):
-                raise ValueError(f'Username {user.User} already exists!')
+        for user in User.username_index.query(username):
+            raise ValueError(f'Username {user.User} already exists!')
 
         user = User(
             username=username,
             password_hash=
-                hashpw(body.get('password').encode(), gensalt()).decode('utf-8'))
+                hashpw(password.encode('utf-8'), gensalt()).decode('utf-8'))
 
-        user.refresh_token = create_user_token(user, is_access_token=False).decode('utf-8')
-
-        token = create_user_token(user)
+        user.refresh_token = create_user_token_as_string(user, is_access_token=False)
 
         user.save()
 
@@ -40,8 +37,7 @@ def handler(event, context):
             "statusCode": 200,
             "body": json.dumps(
                 {
-                    'user_id': user.user_id,
-                    'access_token': token.decode('utf-8'),
+                    'access_token': create_user_token_as_string(user),
                     'refresh_token': user.refresh_token
                 }
             )

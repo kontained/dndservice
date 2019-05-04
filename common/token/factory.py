@@ -18,6 +18,11 @@ def create_user_token(user, is_access_token=True):
     )
 
 
+def create_user_token_as_string(user, is_access_token=True):
+    token = create_user_token(user, is_access_token)
+    return token.decode('utf-8')
+
+
 def validate_user_token(token, is_access_token=True):
     return jwt.decode(
         jwt=token,

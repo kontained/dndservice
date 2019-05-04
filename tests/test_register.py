@@ -72,7 +72,6 @@ class TestRegister(TestCase):
 
         self.assertIsNotNone(result)
         self.assertEqual(result.get('statusCode'), 200)
-        self.assertIsNotNone(body.get('user_id'))
         self.assertIsNotNone(body.get('access_token'))
         self.assertIsNotNone(body.get('refresh_token'))
 
