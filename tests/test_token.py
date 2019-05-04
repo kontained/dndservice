@@ -41,3 +41,14 @@ class TestToken(TestCase):
             test = bytearray(token)
             test[0] = 100
             self.assertRaises(DecodeError, validate_user_token, bytes(test))
+
+    def test_create_refresh_token(self):
+        with mock.patch.dict('os.environ', {'REFRESH_KEY': '987654321'}):
+            result = create_user_token(self.build_user(), False)
+            self.assertTrue(isinstance(result, bytes))
+
+    def test_decode_refresh_token(self):
+        with mock.patch.dict('os.environ', {'REFRESH_KEY': '987654321'}):
+            token = create_user_token(self.build_user(), False)
+            result = validate_user_token(token, False)
+            self.assertIsNotNone(result)

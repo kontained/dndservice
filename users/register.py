@@ -27,8 +27,10 @@ def handler(event, context):
 
         user = User(
             username=username,
-            password_hash=hashpw(body.get('password').encode(), gensalt()),
-            refresh_token = '')
+            password_hash=
+                hashpw(body.get('password').encode(), gensalt()).decode('utf-8'))
+
+        user.refresh_token = create_user_token(user, is_access_token=False).decode('utf-8')
 
         token = create_user_token(user)
 
@@ -39,7 +41,8 @@ def handler(event, context):
             "body": json.dumps(
                 {
                     'user_id': user.user_id,
-                    'token': token.decode('utf-8')
+                    'access_token': token.decode('utf-8'),
+                    'refresh_token': user.refresh_token
                 }
             )
         }

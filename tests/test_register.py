@@ -1,5 +1,6 @@
 from unittest import TestCase, mock
 import json
+import os
 from users.register import handler
 
 
@@ -52,19 +53,41 @@ class TestRegister(TestCase):
 
         self.assertRaises(Exception, handler, event, None)
 
-    def test_user_creation(self):
-        with mock.patch.dict('os.environ', {'SECRET_KEY': '123456789'}):
-            event = {
-                'body': json.dumps({
-                    'username': 'test',
-                    'password': 'test'
-                })
-            }
+    @mock.patch.dict('os.environ', {'SECRET_KEY': '123456789', 'REFRESH_KEY': '987654321'})
+    @mock.patch('common.users.usermodel.User.username_index.query')
+    @mock.patch('common.users.usermodel.User.save')
+    def test_user_creation(self, mockSave, mockQuery):
+        mockSave.return_value = True
+        mockQuery.return_value = []
 
-            result = handler(event, None)
-            body = json.loads(result.get('body'))
+        event = {
+            'body': json.dumps({
+                'username': 'test',
+                'password': 'test'
+            })
+        }
 
-            self.assertIsNotNone(result)
-            self.assertEqual(result.get('statusCode'), 200)
-            self.assertIsNotNone(body.get('user_id'))
-            self.assertIsNotNone(body.get('token'))
+        result = handler(event, None)
+        body = json.loads(result.get('body'))
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result.get('statusCode'), 200)
+        self.assertIsNotNone(body.get('user_id'))
+        self.assertIsNotNone(body.get('access_token'))
+        self.assertIsNotNone(body.get('refresh_token'))
+
+    @mock.patch.dict('os.environ', {'SECRET_KEY': '123456789', 'REFRESH_KEY': '987654321'})
+    @mock.patch('common.users.usermodel.User.username_index.query')
+    @mock.patch('common.users.usermodel.User.save')
+    def test_save_throws_exception(self, mockSave, mockQuery):
+        mockSave.side_effect = Exception('test')
+        mockQuery.return_value = []
+
+        event = {
+            'body': json.dumps({
+                'username': 'test',
+                'password': 'test'
+            })
+        }
+
+        self.assertRaises(Exception, handler, event, None)
